@@ -3,14 +3,7 @@ Creating Custom In App Keyboards with SwiftUI has never been easier than with th
 
 You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 
-## Overview
-* [Features](#features)
-* [Example](#example)
-* [Implementation](#implementation)
-* [Warranty](#warranty)
-
 ## Features
-- **Uses Apple's Accelerate framework on Matrix operations and solving of linear systems for increased performance**
 - Build the entire keyboard layout in SwiftUI
 - Use it in UIKit or SwiftUI
 - Use it parallelly to any native keyboard
@@ -18,7 +11,7 @@ You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 
 ## Creating the Keyboard
 Simply extend the CustomKeyboard class and provide a static property and use the CustomKeyboardBuilder: 
-
+```swift
     extension CustomKeyboard {
         static var yesnt = CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
             VStack {
@@ -49,10 +42,11 @@ Simply extend the CustomKeyboard class and provide a static property and use the
             .padding()
         }
     }
+```
 
 ## Using my Custom Keyboard in SwiftUI
 Once declared, you can use the custom keyboard with the `.customKeyboard(:)` View modifer and using your statically defined property
-
+```swift
     struct ContentView: View {
         @State var text: String = ""
 
@@ -64,13 +58,15 @@ Once declared, you can use the custom keyboard with the `.customKeyboard(:)` Vie
             }
         }
     }
-    
+```
+
 ## Using my Custom KEyboard in UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
-
+```swift
     override func viewDidLoad() {
         myTextField.inputView = CustomKeyboard.yesnt.keyboardInputView
     }
+```
 
 ## Warranty
 The code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
