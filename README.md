@@ -44,7 +44,7 @@ Simply extend the CustomKeyboard class and provide a static property and use the
     }
 ```
 
-## Using my Custom Keyboard in SwiftUI
+## Using My Custom Keyboard in SwiftUI
 Once declared, you can use the custom keyboard with the `.customKeyboard(:)` View modifer and using your statically defined property
 ```swift
     struct ContentView: View {
@@ -60,7 +60,7 @@ Once declared, you can use the custom keyboard with the `.customKeyboard(:)` Vie
     }
 ```
 
-## Using my Custom KEyboard in UIKit
+## Using My Custom KEyboard in UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
 ```swift
     override func viewDidLoad() {
