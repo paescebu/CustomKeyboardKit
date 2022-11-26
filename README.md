@@ -58,7 +58,7 @@ Once declared, you can use the custom keyboard with the `.customKeyboard(:)` Vie
                     .onSubmitCustomKeyboard {
                         print("do something when SubmitHandler called")
                     }
-                }
+                
             }
         }
     }
