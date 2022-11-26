@@ -55,6 +55,10 @@ Once declared, you can use the custom keyboard with the `.customKeyboard(:)` Vie
                 Text(text)
                 TextField("", text: $text)
                     .customKeyboard(.yesnt)
+                    .onSubmitCustomKeyboard {
+                        print("do something when SubmitHandler called")
+                    }
+                }
             }
         }
     }
@@ -64,7 +68,12 @@ Once declared, you can use the custom keyboard with the `.customKeyboard(:)` Vie
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
 ```swift
     override func viewDidLoad() {
-        myTextField.inputView = CustomKeyboard.yesnt.keyboardInputView
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        let customKeyboard =  CustomKeyboard.yesnt
+        customKeyboard.onSubmit = { print("do something when SubmitHandler called") }
+        
+        myTextField.inputView = customKeyboard.keyboardInputView
     }
 ```
 
