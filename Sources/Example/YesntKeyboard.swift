@@ -26,6 +26,10 @@ extension CustomKeyboard {
                     playSystemFeedback?()
                 }
             }
+            Button("Maybe") {
+                textDocumentProxy.insertText("?")
+                playSystemFeedback?()
+            }
             Button("Idk") {
                 textDocumentProxy.insertText("Idk")
                 playSystemFeedback?()
