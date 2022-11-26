@@ -11,7 +11,7 @@ import SwiftUI
 import Introspect
 
 public extension View {
-    func customKeyboard(_ keyboardType: CustomKeyboard, onSubmit: (() -> Void)? = nil) -> some View {
+    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
         self
             .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
     }

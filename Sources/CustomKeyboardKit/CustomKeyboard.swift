@@ -12,11 +12,18 @@ import UIKit
 public class CustomKeyboard: UIInputViewController {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
+    public lazy var keyboardInputView = KeyboardInputView(keyboardUIView: keyboardViewController.view)
     
     internal var keyboardViewController: UIViewController! = nil
-    internal var keyboardInputView: KeyboardSoundEnablingView = KeyboardSoundEnablingView(keyboardUIView: UIView())
     internal var onSubmit: SubmitHandler? = nil
     internal var playSystemFeedback: SystemFeedbackHandler? = UIDevice.current.playInputClick
+    
+    override public var view: UIView! {
+        get {
+            return keyboardInputView
+        }
+        set { }
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()

@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-internal class KeyboardSoundEnablingView: UIView, UIInputViewAudioFeedback {
+public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     var keyboardUIView: UIView
     
-    var enableInputClicksWhenVisible: Bool {
+    public var enableInputClicksWhenVisible: Bool {
         true
     }
     
@@ -38,7 +38,7 @@ internal class KeyboardSoundEnablingView: UIView, UIInputViewAudioFeedback {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         return keyboardUIView.intrinsicContentSize
     }
 }
