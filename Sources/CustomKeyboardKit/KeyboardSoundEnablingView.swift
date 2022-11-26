@@ -10,28 +10,28 @@ import Foundation
 import UIKit
 
 internal class KeyboardSoundEnablingView: UIView, UIInputViewAudioFeedback {
-    var wrappedView: UIView
+    var keyboardUIView: UIView
     
     var enableInputClicksWhenVisible: Bool {
         true
     }
     
-    init(wrappedView: UIView) {
-        self.wrappedView = wrappedView
+    init(keyboardUIView: UIView) {
+        self.keyboardUIView = keyboardUIView
         super.init(frame: .null)
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(wrappedView)
+        self.addSubview(keyboardUIView)
         let constraints = [
-            self.leadingAnchor.constraint(equalTo: wrappedView.leadingAnchor),
-            self.trailingAnchor.constraint(equalTo: wrappedView.trailingAnchor),
-            self.topAnchor.constraint(equalTo: wrappedView.topAnchor),
-            self.bottomAnchor.constraint(equalTo: wrappedView.bottomAnchor),
+            self.leadingAnchor.constraint(equalTo: keyboardUIView.leadingAnchor),
+            self.trailingAnchor.constraint(equalTo: keyboardUIView.trailingAnchor),
+            self.topAnchor.constraint(equalTo: keyboardUIView.topAnchor),
+            self.bottomAnchor.constraint(equalTo: keyboardUIView.bottomAnchor),
         ]
         NSLayoutConstraint.activate(constraints)
         self.backgroundColor = .clear
-        wrappedView.backgroundColor = .clear
+        keyboardUIView.backgroundColor = .clear
     }
         
     required init?(coder: NSCoder) {
@@ -39,6 +39,6 @@ internal class KeyboardSoundEnablingView: UIView, UIInputViewAudioFeedback {
     }
     
     override var intrinsicContentSize: CGSize {
-        return wrappedView.intrinsicContentSize
+        return keyboardUIView.intrinsicContentSize
     }
 }

@@ -13,17 +13,17 @@ public class CustomKeyboard: UIInputViewController {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
     
-    var viewController: UIViewController! = nil
-    var keyboardInputView: KeyboardSoundEnablingView = KeyboardSoundEnablingView(wrappedView: UIView())
-    var onSubmit: SubmitHandler? = nil
-    var playSystemFeedback: SystemFeedbackHandler? = UIDevice.current.playInputClick
+    internal var keyboardViewController: UIViewController! = nil
+    internal var keyboardInputView: KeyboardSoundEnablingView = KeyboardSoundEnablingView(keyboardUIView: UIView())
+    internal var onSubmit: SubmitHandler? = nil
+    internal var playSystemFeedback: SystemFeedbackHandler? = UIDevice.current.playInputClick
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         guard let inputView else { return }
-        addChild(viewController)
+        addChild(keyboardViewController)
         inputView.addSubview(keyboardInputView)
-        viewController.didMove(toParent: self)
+        keyboardViewController.didMove(toParent: self)
         let constraints = [
             keyboardInputView.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
             keyboardInputView.trailingAnchor.constraint(equalTo: inputView.trailingAnchor),
