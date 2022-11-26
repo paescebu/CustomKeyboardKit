@@ -13,9 +13,9 @@ public class CustomKeyboard: UIInputViewController {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
     public lazy var keyboardInputView = KeyboardInputView(keyboardUIView: keyboardViewController.view)
-    
+    public var onSubmit: SubmitHandler? = nil
+
     internal var keyboardViewController: UIViewController! = nil
-    internal var onSubmit: SubmitHandler? = nil
     internal var playSystemFeedback: SystemFeedbackHandler? = UIDevice.current.playInputClick
     
     override public var view: UIView! {
