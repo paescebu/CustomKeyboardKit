@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-///This is an example if an implementation for a custom keyboard.
+///`CustomKeyboardBuilder` lets you build a custom keyboard in SwiftUI, together with haptic/audible feedback and callback on a "submit" button if provided in your layout
 ///- `UITextDocumentProxy` provides you the capability to modify the text thats in focus (e.g. inserting characters or strings, deleting backwards etc.),
 ///- `SubmitHandler?` closure parameter is a closure, when called triggers the registered closure (using the `.onSubmitCustomKeyboard(:)` modiifer.
 ///- `SystemFeedbackHandler?` closure parameter is a closure, when called will play the keyboard system sounds and haptic feedback if enabled in the settings by the user
