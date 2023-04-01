@@ -26,38 +26,38 @@ public extension TextEditor {
 
 public struct CustomKeyboardModifierTextEditor: ViewModifier {
     @Environment(\.onSubmit) var onSubmit
-    var keyboardType: CustomKeyboard
+    @StateObject var keyboardType: CustomKeyboard
     
     public init(keyboardType: CustomKeyboard) {
-        self.keyboardType = keyboardType
+        self._keyboardType = StateObject(wrappedValue: keyboardType)
     }
     
     public func body(content: Content) -> some View {
         content
-            .introspectTextViewWithClipping { uiTextView in
-                uiTextView.inputView = keyboardType.keyboardInputView
-            }
             .onAppear {
                 self.keyboardType.onSubmit = onSubmit
+            }
+            .introspectTextViewWithClipping { uiTextView in
+                uiTextView.inputView = keyboardType.keyboardInputView
             }
     }
 }
 
 public struct CustomKeyboardModifierTextField: ViewModifier {
     @Environment(\.onSubmit) var onSubmit
-    var keyboardType: CustomKeyboard
-    
+    @StateObject var keyboardType: CustomKeyboard
+
     public init(keyboardType: CustomKeyboard) {
-        self.keyboardType = keyboardType
+        self._keyboardType = StateObject(wrappedValue: keyboardType)
     }
     
     public func body(content: Content) -> some View {
         content
-            .introspectTextFieldWithClipping { uiTextField in
-                uiTextField.inputView = keyboardType.keyboardInputView
-            }
             .onAppear {
                 self.keyboardType.onSubmit = onSubmit
+            }
+            .introspectTextFieldWithClipping { uiTextField in
+                uiTextField.inputView = keyboardType.keyboardInputView
             }
     }
 }

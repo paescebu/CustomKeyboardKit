@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 
 public struct OnSubmitCustomKeyboardKey: EnvironmentKey {
-    public static let defaultValue: () -> () = { }
+    public static let defaultValue: () -> () = {
+        print("Hi")
+    }
 }
 
 public extension EnvironmentValues {

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class CustomKeyboard: UIInputViewController {
+public class CustomKeyboard: UIInputViewController, ObservableObject {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
     public lazy var keyboardInputView = KeyboardInputView(keyboardUIView: keyboardViewController.view)
