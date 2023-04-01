@@ -11,25 +11,26 @@ import SwiftUI
 import Introspect
 
 public extension TextField {
-    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
+    func customKeyboard(_ keyboardType: CustomKeyboard, onSubmit: CustomKeyboard.SubmitHandler? = nil) -> some View {
         self
-            .modifier(CustomKeyboardModifierTextField(keyboardType: keyboardType))
+            .modifier(CustomKeyboardModifierTextField(keyboardType: keyboardType, onSubmit: onSubmit))
     }
 }
 
 public extension TextEditor {
-    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
+    func customKeyboard(_ keyboardType: CustomKeyboard, onSubmit: CustomKeyboard.SubmitHandler? = nil) -> some View {
         self
-            .modifier(CustomKeyboardModifierTextEditor(keyboardType: keyboardType))
+            .modifier(CustomKeyboardModifierTextEditor(keyboardType: keyboardType, onSubmit: onSubmit))
     }
 }
 
 public struct CustomKeyboardModifierTextEditor: ViewModifier {
-    @Environment(\.onSubmit) var onSubmit
     var keyboardType: CustomKeyboard
+    var onSubmit: CustomKeyboard.SubmitHandler? = nil
     
-    public init(keyboardType: CustomKeyboard) {
+    public init(keyboardType: CustomKeyboard, onSubmit: CustomKeyboard.SubmitHandler? = nil) {
         self.keyboardType = keyboardType
+        self.keyboardType.onSubmit = onSubmit
     }
     
     public func body(content: Content) -> some View {
@@ -37,27 +38,22 @@ public struct CustomKeyboardModifierTextEditor: ViewModifier {
             .introspectTextViewWithClipping { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
             }
-            .onAppear {
-                self.keyboardType.onSubmit = onSubmit
-            }
     }
 }
 
 public struct CustomKeyboardModifierTextField: ViewModifier {
-    @Environment(\.onSubmit) var onSubmit
     var keyboardType: CustomKeyboard
+    var onSubmit: CustomKeyboard.SubmitHandler? = nil
     
-    public init(keyboardType: CustomKeyboard) {
+    public init(keyboardType: CustomKeyboard, onSubmit: CustomKeyboard.SubmitHandler? = nil) {
         self.keyboardType = keyboardType
+        self.keyboardType.onSubmit = onSubmit
     }
     
     public func body(content: Content) -> some View {
         content
             .introspectTextFieldWithClipping { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
-            }
-            .onAppear {
-                self.keyboardType.onSubmit = onSubmit
             }
     }
 }
