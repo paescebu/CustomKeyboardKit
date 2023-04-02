@@ -9,6 +9,7 @@ You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 - Use it in UIKit or SwiftUI
 - Interact with the focused text using the UITextDocumentProxy closure parameter
 - Use it parallelly to any native keyboard
+- Works with SwiftUI's new `scrollDismissesKeyboard(:)` modifiers etc.
 - Works flawlessly on iOS and iPadOS
 
 ## Creating the Keyboard
