@@ -15,71 +15,71 @@ You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 ## Creating the Keyboard
 Simply extend the CustomKeyboard class and provide a static computed property and use the CustomKeyboardBuilder, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
 ```swift
-    extension CustomKeyboard {
-        static var yesnt: CustomKeyboard {
-            CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
-                VStack {
-                    HStack {
-                        Button("Yes!") {
-                            textDocumentProxy.insertText("Yes")
-                            playSystemFeedback?()
-                        }
-                        Button("No!") {
-                            textDocumentProxy.insertText("No")
-                            playSystemFeedback?()
-                        }
-                    }
-                    Button("Maybe") {
-                        textDocumentProxy.insertText("?")
+extension CustomKeyboard {
+    static var yesnt: CustomKeyboard {
+        CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+            VStack {
+                HStack {
+                    Button("Yes!") {
+                        textDocumentProxy.insertText("Yes")
                         playSystemFeedback?()
                     }
-                    Button("Idk") {
-                        textDocumentProxy.insertText("Idk")
+                    Button("No!") {
+                        textDocumentProxy.insertText("No")
                         playSystemFeedback?()
-                    }
-                    Button("Can you repeat the question?") {
-                        playSystemFeedback?()
-                        submit?()
                     }
                 }
-                .buttonStyle(.bordered)
-                .padding()
+                Button("Maybe") {
+                    textDocumentProxy.insertText("?")
+                    playSystemFeedback?()
+                }
+                Button("Idk") {
+                    textDocumentProxy.insertText("Idk")
+                    playSystemFeedback?()
+                }
+                Button("Can you repeat the question?") {
+                    playSystemFeedback?()
+                    submit?()
+                }
             }
+            .buttonStyle(.bordered)
+            .padding()
         }
     }
+}
 ```
 
 ## Using My Custom Keyboard In SwiftUI
 Once declared, you can use the custom keyboard with the `.customKeyboard(:)` View modifer and using your statically defined property
 ```swift
-    struct ContentView: View {
-        @State var text: String = ""
+struct ContentView: View {
+    @State var text: String = ""
 
-        var body: some View {
-            VStack {
-                Text(text)
-                TextField("", text: $text)
-                    .customKeyboard(.yesnt)
-                    .onSubmitCustomKeyboard {
-                        print("do something when SubmitHandler called")
-                    }
-                
-            }
+    var body: some View {
+        VStack {
+            Text(text)
+            TextField("", text: $text)
+                .customKeyboard(.yesnt)
+                .onSubmitCustomKeyboard {
+                    print("do something when SubmitHandler called")
+                }
+
         }
     }
+}
 ```
 
 ## Using My Custom Keyboard In UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
 ```swift
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        let customKeyboard =  CustomKeyboard.yesnt
-        customKeyboard.onSubmit = { print("do something when SubmitHandler called") }
-        
-        myTextField.inputView = customKeyboard.keyboardInputView
-    }
+override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view.
+    let customKeyboard =  CustomKeyboard.yesnt
+    customKeyboard.onSubmit = { print("do something when SubmitHandler called") }
+
+    myTextField.inputView = customKeyboard.keyboardInputView
+}
 ```
 
 
@@ -87,54 +87,54 @@ Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` proper
 Check out the video below for the following example code and see how it works perfectly side by side with native keyboards.
 
 ```swift
-    struct ContentView: View {
-        @State var text0: String = ""
-        @State var text1: String = ""
-        @State var text2: String = ""
-        @State var text3: String = ""
+struct ContentView: View {
+    @State var text0: String = ""
+    @State var text1: String = ""
+    @State var text2: String = ""
+    @State var text3: String = ""
 
-        var body: some View {
-            VStack {
-                Group {
-                    TextField("ABC", text: $text0)
-                        .customKeyboard(.alphabet)
-                    TextField("Numpad", text: $text1)
-                        .keyboardType(.numberPad)
-                    TextField("ABC", text: $text2)
-                        .customKeyboard(.alphabet)
-                    TextField("Normal", text: $text3)
-                        //normal keyboard
-                }
-                .background(Color.gray)
+    var body: some View {
+        VStack {
+            Group {
+                TextField("ABC", text: $text0)
+                    .customKeyboard(.alphabet)
+                TextField("Numpad", text: $text1)
+                    .keyboardType(.numberPad)
+                TextField("ABC", text: $text2)
+                    .customKeyboard(.alphabet)
+                TextField("Normal", text: $text3)
+                    //normal keyboard
             }
+            .background(Color.gray)
+        }
+        .padding()
+    }
+}
+
+extension CustomKeyboard {
+    static var alphabet: CustomKeyboard {
+        CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { $0 }
+            let gridItem = GridItem.init(.adaptive(minimum: 25))
+
+            return LazyVGrid(columns: [gridItem], spacing: 5) {
+                ForEach(letters, id: \.self) { char in
+                    Button(char.uppercased()) {
+                        textDocumentProxy.insertText("\(char)")
+                        playSystemFeedback?()
+                    }
+                    .frame(width: 25, height: 40)
+                    .background(Color.white)
+                    .foregroundColor(Color.black)
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
+                }
+            }
+            .frame(height: 150)
             .padding()
         }
     }
-
-    extension CustomKeyboard {
-        static var alphabet: CustomKeyboard {
-            CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
-                let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { $0 }
-                let gridItem = GridItem.init(.adaptive(minimum: 25))
-                
-                return LazyVGrid(columns: [gridItem], spacing: 5) {
-                    ForEach(letters, id: \.self) { char in
-                        Button(char.uppercased()) {
-                            textDocumentProxy.insertText("\(char)")
-                            playSystemFeedback?()
-                        }
-                        .frame(width: 25, height: 40)
-                        .background(Color.white)
-                        .foregroundColor(Color.black)
-                        .cornerRadius(8)
-                        .shadow(radius: 2)
-                    }
-                }
-                .frame(height: 150)
-                .padding()
-            }
-        }
-    }
+}
 ```
 
 https://user-images.githubusercontent.com/59558722/204609124-b99b0d8d-f38f-42d3-afa5-cbf7e72e86c8.mp4
