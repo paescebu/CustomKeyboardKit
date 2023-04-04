@@ -5,6 +5,7 @@ You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 
 ## Features
 - Build the entire keyboard layout in SwiftUI
+    - Doesn't even have to be a keyboard, **build literally anything that pops up for focused text fields!**
 - Can play native iOS/iPadOS keyboard sounds and haptic feedback
 - Use it in UIKit or SwiftUI
 - Interact with the focused text using the UITextDocumentProxy closure parameter
