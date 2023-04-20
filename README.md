@@ -147,3 +147,6 @@ The code comes with no warranty of any kind. I hope it'll be useful to you (it c
 ## Special Thanks
 Special thanks goes to the user @crayment which made it particularly easy for me with SwiftUI-Introspect to apply the Custom Keyboard to SwiftUI TextFields.
 
+## Donations
+You really don't have to pay anything to use this package. But if you feel generous today and would like to donate because this package helped you so much, here's a PayPal donation link:
+https://www.paypal.com/donate/?hosted_button_id=JYL8DBGA2X4YQ
