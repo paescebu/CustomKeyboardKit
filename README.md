@@ -50,7 +50,7 @@ extension CustomKeyboard {
 }
 ```
 
-## Using My Custom Keyboard In SwiftUI
+## Using Your Custom Keyboard In SwiftUI
 Once declared, you can use the custom keyboard with the `.customKeyboard(:)` View modifer and using your statically defined property
 ```swift
 struct ContentView: View {
@@ -70,7 +70,7 @@ struct ContentView: View {
 }
 ```
 
-## Using My Custom Keyboard In UIKit
+## Using Your Custom Keyboard In UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
 ```swift
 override func viewDidLoad() {
@@ -143,9 +143,6 @@ https://user-images.githubusercontent.com/59558722/204609124-b99b0d8d-f38f-42d3-
 
 ## Warranty
 The code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
-
-## Special Thanks
-Special thanks goes to the user @crayment which made it particularly easy for me with SwiftUI-Introspect to apply the Custom Keyboard to SwiftUI TextFields.
 
 ## Donations
 You really don't have to pay anything to use this package. But if you feel generous today and would like to donate because this package helped you so much, here's a PayPal donation link:
