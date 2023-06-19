@@ -16,13 +16,15 @@ import SwiftUI
 public class CustomKeyboardBuilder: CustomKeyboard {
     public init(@ViewBuilder customKeyboardView: @escaping ((UITextDocumentProxy, SubmitHandler?, SystemFeedbackHandler?) -> some View)) {
         super.init(nibName: nil, bundle: nil)
-        
-        let keyboardViewController = UIHostingController(
-            rootView: customKeyboardView(self.textDocumentProxy, { self.onSubmit?() }, playSystemFeedback)
+        let viewController = UIHostingController.init(
+            rootView: customKeyboardView(
+                self.textDocumentProxy,
+                { self.onSubmit?() },
+                self.playSystemFeedback
+            )
         )
-        keyboardViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        keyboardViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        self.keyboardViewController = keyboardViewController
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.keyboardView = viewController.view
     }
     
     required init?(coder: NSCoder) {

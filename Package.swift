@@ -19,6 +19,8 @@ let package = Package(
     targets: [
         .target(
             name: "CustomKeyboardKit",
-            dependencies: [.product(name: "Introspect", package: "SwiftUI-Introspect")]),
+            dependencies: [
+                .product(name: "Introspect", package: "SwiftUI-Introspect")
+            ]),
     ]
 )

@@ -18,10 +18,9 @@ public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     
     init(keyboardUIView: UIView) {
         self.keyboardUIView = keyboardUIView
-        super.init(frame: .null)
+        super.init(frame: .zero)
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.translatesAutoresizingMaskIntoConstraints = false
-        
         self.addSubview(keyboardUIView)
         let constraints = [
             self.leadingAnchor.constraint(equalTo: keyboardUIView.leadingAnchor),
