@@ -13,7 +13,8 @@ import SwiftUI
 public class CustomKeyboard: UIInputViewController, ObservableObject {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
-    public lazy var keyboardInputView = KeyboardInputView(keyboardUIView: keyboardView)
+    
+    public private(set) lazy var keyboardInputView = KeyboardInputView(keyboardUIView: keyboardView)
     public var onSubmit: SubmitHandler? = nil
     
     internal var keyboardView: UIView! = nil

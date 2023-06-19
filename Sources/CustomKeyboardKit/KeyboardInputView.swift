@@ -18,8 +18,10 @@ public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     
     init(keyboardUIView: UIView) {
         self.keyboardUIView = keyboardUIView
-        super.init(frame: .zero)
+        keyboardUIView.backgroundColor = .clear
         keyboardUIView.translatesAutoresizingMaskIntoConstraints = false
+
+        super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(keyboardUIView)
         let constraints = [
@@ -30,7 +32,6 @@ public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
         ]
         NSLayoutConstraint.activate(constraints)
         backgroundColor = .clear
-        keyboardUIView.backgroundColor = .clear
     }
         
     required init?(coder: NSCoder) {
