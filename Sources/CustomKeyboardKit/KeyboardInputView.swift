@@ -19,17 +19,17 @@ public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     init(keyboardUIView: UIView) {
         self.keyboardUIView = keyboardUIView
         super.init(frame: .zero)
-        self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(keyboardUIView)
+        keyboardUIView.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
+        addSubview(keyboardUIView)
         let constraints = [
-            self.leadingAnchor.constraint(equalTo: keyboardUIView.leadingAnchor),
-            self.trailingAnchor.constraint(equalTo: keyboardUIView.trailingAnchor),
-            self.topAnchor.constraint(equalTo: keyboardUIView.topAnchor),
-            self.bottomAnchor.constraint(equalTo: keyboardUIView.bottomAnchor),
+            leadingAnchor.constraint(equalTo: keyboardUIView.leadingAnchor),
+            trailingAnchor.constraint(equalTo: keyboardUIView.trailingAnchor),
+            topAnchor.constraint(equalTo: keyboardUIView.topAnchor),
+            bottomAnchor.constraint(equalTo: keyboardUIView.bottomAnchor),
         ]
         NSLayoutConstraint.activate(constraints)
-        self.backgroundColor = .clear
+        backgroundColor = .clear
         keyboardUIView.backgroundColor = .clear
     }
         

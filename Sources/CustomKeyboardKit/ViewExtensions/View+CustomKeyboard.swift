@@ -35,7 +35,7 @@ public struct CustomKeyboardModifierTextEditor: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .onAppear {
-                self.keyboardType.onSubmit = onSubmit
+                keyboardType.onSubmit = onSubmit
             }
             .introspectTextViewWithClipping { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
