@@ -37,7 +37,7 @@ public struct CustomKeyboardModifierTextEditor: ViewModifier {
             .onAppear {
                 keyboardType.onSubmit = onSubmit
             }
-            .introspect(.textEditor, on: .iOS(.v15, .v16, .v17)) { uiTextView in
+            .introspect(.textEditor, on: .iOS(.v15AndAbove)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
             }
     }
@@ -56,8 +56,9 @@ public struct CustomKeyboardModifierTextField: ViewModifier {
             .onAppear {
                 keyboardType.onSubmit = onSubmit
             }
-            .introspect(.textField, on: .iOS(.v15, .v16, .v17)) { uiTextView in
+            .introspect(.textField, on: .iOS(.v15AndAbove)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
             }
     }
 }
+
