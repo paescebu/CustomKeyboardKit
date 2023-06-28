@@ -56,8 +56,8 @@ public struct CustomKeyboardModifierTextField: ViewModifier {
             .onAppear {
                 keyboardType.onSubmit = onSubmit
             }
-            .introspect(.textField, on: .iOS(.v15AndAbove)) { uiTextView in
-                uiTextView.inputView = keyboardType.keyboardInputView
+            .introspect(.textField, on: .iOS(.v15AndAbove)) { uiTextField in
+                uiTextField.inputView = keyboardType.keyboardInputView
             }
     }
 }

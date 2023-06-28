@@ -9,16 +9,16 @@
 import UIKit
 
 internal extension iOSViewVersion<TextFieldType, UITextField> {
-    public static let v15AndAbove = Self(for: .v15AndAbove)
+    static let v15AndAbove = Self(for: .v15AndAbove)
 }
 
 internal extension iOSViewVersion<TextEditorType, UITextView> {
-    public static let v15AndAbove = Self(for: .v15AndAbove)
+    static let v15AndAbove = Self(for: .v15AndAbove)
 }
 
 
 internal extension iOSVersion {
-    public static let v15AndAbove = iOSVersion {
+    static let v15AndAbove = iOSVersion {
         if #available(iOS 15, *) {
             return true
         }
