@@ -11,6 +11,18 @@ import SwiftUI
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension TextField {
+    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler?, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
+        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
+    }
+}
+
+public extension TextEditor {
+    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler?, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
+        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
+    }
+}
+
+public extension TextField {
     func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
         self
             .modifier(CustomKeyboardModifierTextField(keyboardType: keyboardType))

@@ -83,6 +83,37 @@ override func viewDidLoad() {
 }
 ```
 
+##Alternative direct SwiftUI use:
+You can also directly use the `customKeyboard(view:)` modifier that allows you to build the custom keyboard within the view body itself, if you need to access some View properties or constants etc. 
+Example:
+```swift
+struct ContentView: View {
+    @State var text = "0"
+    
+    var body: some View {
+        TextField("", text: $text)
+            .customKeyboard { textDocumentProxy, onSubmit, playFeedback in
+                VStack {
+                    numberButton(text: "1", uiTextDocuemntProxy: textDocumentProxy, playFeedback: playFeedback)
+                    numberButton(text: "2", uiTextDocuemntProxy: textDocumentProxy, playFeedback: playFeedback)
+                    Button("DEL") {
+                        textDocumentProxy.deleteBackward()
+                        playFeedback?()
+                    }
+                }
+            }
+    }
+    
+    func numberButton(text: String, uiTextDocuemntProxy: UITextDocumentProxy, playFeedback: (() -> ())?) -> some View {
+        Button(text) {
+            uiTextDocuemntProxy.insertText(text)
+            playFeedback?()
+        }
+    }
+}
+```
+This works equally with `TextEditor`
+
 
 ## Complete Example
 Check out the video below for the following example code and see how it works perfectly side by side with native keyboards.
