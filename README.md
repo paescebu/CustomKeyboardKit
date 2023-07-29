@@ -83,7 +83,7 @@ override func viewDidLoad() {
 }
 ```
 
-##Alternative direct SwiftUI use:
+## Alternative direct SwiftUI use:
 You can also directly use the `customKeyboard(view:)` modifier that allows you to build the custom keyboard within the view body itself, if you need to access some View properties or constants etc. 
 Example:
 ```swift
