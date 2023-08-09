@@ -94,8 +94,8 @@ struct ContentView: View {
         TextField("", text: $text)
             .customKeyboard { textDocumentProxy, onSubmit, playFeedback in
                 VStack {
-                    numberButton(text: "1", uiTextDocuemntProxy: textDocumentProxy, playFeedback: playFeedback)
-                    numberButton(text: "2", uiTextDocuemntProxy: textDocumentProxy, playFeedback: playFeedback)
+                    numberButton(text: "1", uiTextDocumentProxy: textDocumentProxy, playFeedback: playFeedback)
+                    numberButton(text: "2", uiTextDocumentProxy: textDocumentProxy, playFeedback: playFeedback)
                     Button("DEL") {
                         textDocumentProxy.deleteBackward()
                         playFeedback?()
@@ -104,9 +104,9 @@ struct ContentView: View {
             }
     }
     
-    func numberButton(text: String, uiTextDocuemntProxy: UITextDocumentProxy, playFeedback: (() -> ())?) -> some View {
+    func numberButton(text: String, uiTextDocumentProxy: UITextDocumentProxy, playFeedback: (() -> ())?) -> some View {
         Button(text) {
-            uiTextDocuemntProxy.insertText(text)
+            uiTextDocumentProxy.insertText(text)
             playFeedback?()
         }
     }
