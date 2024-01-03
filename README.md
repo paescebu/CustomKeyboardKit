@@ -171,7 +171,6 @@ extension CustomKeyboard {
 
 https://user-images.githubusercontent.com/59558722/204609124-b99b0d8d-f38f-42d3-afa5-cbf7e72e86c8.mp4
 
-
 ## Warranty
 The code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
 
