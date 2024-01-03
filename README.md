@@ -172,6 +172,9 @@ extension CustomKeyboard {
 https://user-images.githubusercontent.com/59558722/204609124-b99b0d8d-f38f-42d3-afa5-cbf7e72e86c8.mp4
 
 
+## Build from Source
+As this library is only supported by iOS, you have to use `xcodebuild -scheme CustomKeyboardKit -destination 'generic/platform=iOS'` to build it from the command line. `swift build` is not supported for iOS only targets.
+
 ## Warranty
 The code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
 
