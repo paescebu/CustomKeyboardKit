@@ -10,33 +10,20 @@ import UIKit
 import SwiftUI
 @_spi(Advanced) import SwiftUIIntrospect
 
-public extension TextField {
+public extension View {
     func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler?, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
         customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
     }
 }
 
-public extension TextEditor {
-    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler?, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
-        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
-    }
-}
-
-public extension TextField {
+public extension View {
     func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
         self
-            .modifier(CustomKeyboardModifierTextField(keyboardType: keyboardType))
+            .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
     }
 }
 
-public extension TextEditor {
-    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
-        self
-            .modifier(CustomKeyboardModifierTextEditor(keyboardType: keyboardType))
-    }
-}
-
-public struct CustomKeyboardModifierTextEditor: ViewModifier {
+public struct CustomKeyboardModifier: ViewModifier {
     @Environment(\.onSubmit) var onSubmit
     @StateObject var keyboardType: CustomKeyboard
     
@@ -52,25 +39,8 @@ public struct CustomKeyboardModifierTextEditor: ViewModifier {
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
             }
-    }
-}
-
-public struct CustomKeyboardModifierTextField: ViewModifier {
-    @Environment(\.onSubmit) var onSubmit
-    @StateObject var keyboardType: CustomKeyboard
-
-    public init(keyboardType: CustomKeyboard) {
-        self._keyboardType = StateObject(wrappedValue: keyboardType)
-    }
-    
-    public func body(content: Content) -> some View {
-        content
-            .onAppear {
-                keyboardType.onSubmit = onSubmit
-            }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
             }
     }
 }
-
