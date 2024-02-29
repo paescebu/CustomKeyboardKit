@@ -1,7 +1,9 @@
 # CustomKeyboardKit
-Creating Custom In App Keyboards with SwiftUI has never been easier than with this Swift Package
+I strongly believe that any in app keyboard layout is best built in SwiftUI, no matter if its used in SwiftUI or UIKit. 
+With that lightweight package I think I offer you the necessary tools to do so in the UI Framework that we all started to embrace and love. SwiftUI!
 
-You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
+My goal is to keep this framework as lightweight as it is, to not add bloat to it with features most people do not need. This ensures keeping the complexity of the package at its minimum, which translates to a certain stability and reliability. 
+I sincerely hope with this package I managed to deliver pretty much unrestricted possibilities for you.
 
 ## Features
 - Build the entire keyboard layout in SwiftUI
