@@ -64,10 +64,6 @@ struct ContentView: View {
             Text(text)
             TextField("", text: $text)
                 .customKeyboard(.yesnt)
-                .onCustomSubmit {
-                    print("do something when SubmitHandler called")
-                }
-
         }
     }
 }
