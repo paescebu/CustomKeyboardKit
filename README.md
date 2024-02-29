@@ -12,6 +12,7 @@ You can now build a Keyboard with 100% SwiftUI for your SwiftUI or UIKit App!
 - Use it parallelly to any native keyboard
 - Works with SwiftUI's new `scrollDismissesKeyboard(:)` modifiers etc.
 - Works flawlessly on iOS and iPadOS
+- Works with the native `onSubmit` modifier, but behaviour can be fully customized by using `onCustomSubmit` instead
 
 ## Creating the Keyboard
 Simply extend the CustomKeyboard class and provide a static computed property and use the CustomKeyboardBuilder, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
@@ -61,7 +62,7 @@ struct ContentView: View {
             Text(text)
             TextField("", text: $text)
                 .customKeyboard(.yesnt)
-                .onSubmitCustomKeyboard {
+                .onCustomSubmit {
                     print("do something when SubmitHandler called")
                 }
 
@@ -69,6 +70,28 @@ struct ContentView: View {
     }
 }
 ```
+
+## About Customizing The Submit Button Tap Behaviour
+The custom keyboard supports the native `onSubmit` modifier to pass a closure to perform actions after the submit button has been tapped.
+In order to fully customize the behaviour of the submit button to not follow the native behaviour (e.g. not closing the keyboard) the `onCustomSubmit` modifier shall be used.
+```swift
+struct ContentView: View {
+    @State var text: String = ""
+
+    var body: some View {
+        VStack {
+            Text(text)
+            TextField("", text: $text)
+                .customKeyboard(.yesnt)
+                .onCustomSubmit {
+                    print("do something when SubmitHandler has been called")
+                }
+
+        }
+    }
+}
+```
+If both modifiers are used `onCustomSubmit` takes precendece over `onSubmit` and performs the closure inside `onCustomSubmit` only. So please make sure to only use one of the two ideally.
 
 ## Using Your Custom Keyboard In UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
