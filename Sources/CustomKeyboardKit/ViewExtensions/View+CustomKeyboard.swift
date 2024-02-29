@@ -11,7 +11,7 @@ import SwiftUI
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
-    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler?, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
+    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
         customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
     }
 }
@@ -24,7 +24,7 @@ public extension View {
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
-    @Environment(\.onSubmit) var onSubmit
+    @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var keyboardType: CustomKeyboard
     
     public init(keyboardType: CustomKeyboard) {
@@ -34,7 +34,7 @@ public struct CustomKeyboardModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .onAppear {
-                keyboardType.onSubmit = onSubmit
+                keyboardType.onSubmit = onCustomSubmit
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView

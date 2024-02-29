@@ -14,12 +14,19 @@ import SwiftUI
 ///- `SubmitHandler?` closure parameter is a closure, when called triggers the registered closure (using the `.onSubmitCustomKeyboard(:)` modifier.
 ///- `SystemFeedbackHandler?` closure parameter is a closure, when called will play the keyboard system sounds and haptic feedback if enabled in the settings by the user
 public class CustomKeyboardBuilder: CustomKeyboard {
-    public init(@ViewBuilder customKeyboardView: @escaping ((UITextDocumentProxy, SubmitHandler?, SystemFeedbackHandler?) -> some View)) {
+    public init(@ViewBuilder customKeyboardView: @escaping ((UITextDocumentProxy, @escaping SubmitHandler, SystemFeedbackHandler?) -> some View)) {
         super.init(nibName: nil, bundle: nil)
+        let onSubmitClosure = {
+            if let onSubmit = self.onSubmit {
+                onSubmit()
+            } else {
+                self.textDocumentProxy.insertText("\n")
+            }
+        }
         let hostingController = UIHostingController.init(
             rootView: customKeyboardView(
                 self.textDocumentProxy,
-                { self.onSubmit?() },
+                onSubmitClosure,
                 self.playSystemFeedback
             )
         )

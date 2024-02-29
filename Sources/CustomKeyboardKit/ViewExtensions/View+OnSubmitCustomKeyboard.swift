@@ -8,20 +8,20 @@
 import Foundation
 import SwiftUI
 
-public struct OnSubmitCustomKeyboardKey: EnvironmentKey {
-    public static let defaultValue: () -> () = { }
+public struct OnCustomSubmitCustomKeyboardKey: EnvironmentKey {
+    public static let defaultValue: CustomKeyboard.SubmitHandler? = nil
 }
 
 public extension EnvironmentValues {
-  var onSubmit: () -> () {
-    get { self[OnSubmitCustomKeyboardKey.self] }
-    set { self[OnSubmitCustomKeyboardKey.self] = newValue }
+  var onCustomSubmit: CustomKeyboard.SubmitHandler? {
+    get { self[OnCustomSubmitCustomKeyboardKey.self] }
+    set { self[OnCustomSubmitCustomKeyboardKey.self] = newValue }
   }
 }
 
 public extension View {
-    func onSubmitCustomKeyboard(action: @escaping () -> ()) -> some View {
+    func onCustomSubmit(action: @escaping CustomKeyboard.SubmitHandler) -> some View {
         self
-            .environment(\.onSubmit, action)
+            .environment(\.onCustomSubmit, action)
     }
 }
