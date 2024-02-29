@@ -1,5 +1,5 @@
 //
-//  View+OnSubmitCustomKeyboard.swift
+//  View+OnCustomSubmitKey.swift
 //  
 //
 //  Created by Pascal Burlet on 26.11.22.
@@ -8,14 +8,14 @@
 import Foundation
 import SwiftUI
 
-public struct OnCustomSubmitCustomKeyboardKey: EnvironmentKey {
+public struct OnCustomSubmitKey: EnvironmentKey {
     public static let defaultValue: CustomKeyboard.SubmitHandler? = nil
 }
 
 public extension EnvironmentValues {
   var onCustomSubmit: CustomKeyboard.SubmitHandler? {
-    get { self[OnCustomSubmitCustomKeyboardKey.self] }
-    set { self[OnCustomSubmitCustomKeyboardKey.self] = newValue }
+    get { self[OnCustomSubmitKey.self] }
+    set { self[OnCustomSubmitKey.self] = newValue }
   }
 }
 
