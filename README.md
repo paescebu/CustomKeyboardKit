@@ -89,7 +89,7 @@ struct ContentView: View {
     }
 }
 ```
-If both modifiers are used `onCustomSubmit` takes precendece over `onSubmit` and performs the closure inside `onCustomSubmit` only. So please make sure to only use one of the two ideally.
+If both modifiers are used `onCustomSubmit` takes precedence over `onSubmit` and performs the closure inside `onCustomSubmit` only. So please make sure to only use one of the two ideally.
 
 ## Using Your Custom Keyboard In UIKit
 Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
