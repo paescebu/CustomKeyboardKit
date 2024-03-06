@@ -43,7 +43,7 @@ extension CustomKeyboard {
                 }
                 Button("Can you repeat the question?") {
                     playSystemFeedback?()
-                    submit?()
+                    submit()
                 }
             }
             .buttonStyle(.bordered)
