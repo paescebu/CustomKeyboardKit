@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
@@ -24,23 +25,43 @@ public extension View {
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
+    let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
-    @StateObject var keyboardType: CustomKeyboard
+    @StateObject var responderObserver = ViewResponderObserver()
     
     public init(keyboardType: CustomKeyboard) {
-        self._keyboardType = StateObject(wrappedValue: keyboardType)
+        self.keyboardType = keyboardType
     }
     
     public func body(content: Content) -> some View {
         content
-            .onAppear {
-                keyboardType.onSubmit = onCustomSubmit
+            .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
+                assignCustomSubmitToKeyboardForFirstResponder(isFirstResponder: isFirstResponder)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
+                responderObserver.view = uiTextView
+                recoverCustomInputViewIfNeeded(for: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
+                responderObserver.view = uiTextField
+                recoverCustomInputViewIfNeeded(for: uiTextField)
             }
+    }
+    
+    func assignCustomSubmitToKeyboardForFirstResponder(isFirstResponder: Bool) {
+        if isFirstResponder {
+            keyboardType.onSubmit = onCustomSubmit
+        }
+    }
+    
+    func recoverCustomInputViewIfNeeded(for view: UIView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+                view.resignFirstResponder()
+                view.becomeFirstResponder()
+            }
+        }
     }
 }
