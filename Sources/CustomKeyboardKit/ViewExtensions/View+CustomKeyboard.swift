@@ -38,9 +38,21 @@ public struct CustomKeyboardModifier: ViewModifier {
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
+
+                recoverCustomInputViewIfNeeded(for: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
+                recoverCustomInputViewIfNeeded(for: uiTextField)
             }
+    }
+    
+    func recoverCustomInputViewIfNeeded(for view: UIView) {
+        if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+            DispatchQueue.main.async {
+                view.resignFirstResponder()
+                view.becomeFirstResponder()
+            }
+        }
     }
 }
