@@ -12,10 +12,6 @@ import UIKit
 public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     var keyboardUIView: UIView
     
-    var isVisible: Bool {
-        keyboardUIView.window != nil
-    }
-    
     public var enableInputClicksWhenVisible: Bool {
         true
     }
