@@ -35,10 +35,7 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .onReceive(
-                responderObserver.$isFirstResponder
-                    .delay(for: .milliseconds(100), scheduler: DispatchQueue.main)
-            ) { isFirstResponder in
+            .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
                 assignCustomSubmitToKeyboardForFirstResponder(for: responderObserver.view)
                 recoverCustomKeyboardViewIfNeeded(isFirstResponder: isFirstResponder)
             }
@@ -59,9 +56,11 @@ public struct CustomKeyboardModifier: ViewModifier {
     }
     
     func recoverCustomKeyboardViewIfNeeded(isFirstResponder: Bool) {
-        if isFirstResponder && !keyboardType.keyboardInputView.isVisible {
-            responderObserver.view?.resignFirstResponder()
-            responderObserver.view?.becomeFirstResponder()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+                responderObserver.view?.resignFirstResponder()
+                responderObserver.view?.becomeFirstResponder()
+            }
         }
     }
 }
