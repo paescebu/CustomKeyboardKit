@@ -57,7 +57,7 @@ public struct CustomKeyboardModifier: ViewModifier {
     }
     
     func recoverCustomKeyboardViewIfNeeded(for view: UIView?) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             if view?.isFirstResponder == true && !keyboardType.keyboardInputView.isVisible {
                 responderObserver.view?.resignFirstResponder()
                 responderObserver.view?.becomeFirstResponder()
