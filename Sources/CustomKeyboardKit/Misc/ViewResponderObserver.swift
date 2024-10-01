@@ -8,66 +8,58 @@
 import UIKit
 import Combine
 
-fileprivate extension Notification.Name {
-    static let viewDidBecomeFirstResponder = Notification.Name("CustomKeyboardKit.viewDidBecomeFirstResponder")
-}
-
-fileprivate extension Notification {
-    static let keyboardObserverIdKey = "keyboardObserverIdKey"
-
-    @MainActor
-    var viewResponderObserverId: ObjectIdentifier? {
-        userInfo?[Self.keyboardObserverIdKey] as? ObjectIdentifier
-    }
-}
-
 @MainActor
-class ViewResponderObserver: NSObject, ObservableObject, UITextFieldDelegate, UITextViewDelegate, Identifiable {
+class ViewResponderObserver: NSObject, ObservableObject, Identifiable {
     @Published var isFirstResponder: Bool = false
-    var cancellables: Set<AnyCancellable> = .init()
-    
+    private var cancellables: Set<AnyCancellable> = []
+
     var view: UIView? {
         didSet {
-            observeFirstResponder()
+            cancellables.removeAll()
+            observeEditingStateForTextField(for: view)
+            observeEditingStateForTextView(for: view)
+        }
+    }
+
+    private func observeEditingStateForTextField(for view: UIView?) {
+        if let textField = view as? UITextField {
+            let didBeginEditingPublisher = NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification, object: textField)
+            let didEndEditingPublisher = NotificationCenter.default.publisher(for: UITextField.textDidEndEditingNotification, object: textField)
+            
+            didBeginEditingPublisher
+                .sink { [weak self] _ in
+                    self?.isFirstResponder = true
+                }
+                .store(in: &cancellables)
+
+            didEndEditingPublisher
+                .sink { [weak self] _ in
+                    self?.isFirstResponder = false
+                }
+                .store(in: &cancellables)
         }
     }
     
-    func observeFirstResponder() {
+    private func observeEditingStateForTextView(for view: UIView?) {
+        if let textView = view as? UITextView {
+            let didBeginEditingPublisher = NotificationCenter.default.publisher(for: UITextView.textDidBeginEditingNotification, object: textView)
+            let didEndEditingPublisher = NotificationCenter.default.publisher(for: UITextView.textDidEndEditingNotification, object: textView)
+            
+            didBeginEditingPublisher
+                .sink { [weak self] _ in
+                    self?.isFirstResponder = true
+                }
+                .store(in: &cancellables)
+
+            didEndEditingPublisher
+                .sink { [weak self] _ in
+                    self?.isFirstResponder = false
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+    deinit {
         cancellables.removeAll()
-        
-        NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
-            .sink { [weak self] notification in
-                self?.keyboardWillShow(notification)
-            }
-            .store(in: &cancellables)
-        NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
-            .sink { [weak self] notification in
-                self?.keyboardWillHide(notification)
-            }
-            .store(in: &cancellables)
-        NotificationCenter.default.publisher(for: .viewDidBecomeFirstResponder)
-            .sink { [weak self] notification in
-                self?.viewDidBecomeFirstResponder(notification)
-            }
-            .store(in: &cancellables)
-    }
-
-    func keyboardWillShow(_ notification: Notification) {
-        if !isFirstResponder && view?.isFirstResponder == true {
-            isFirstResponder = true
-            NotificationCenter.default.post(name: .viewDidBecomeFirstResponder, object: nil, userInfo: [Notification.keyboardObserverIdKey : id ])
-        }
-    }
-    
-    func keyboardWillHide(_ notification: Notification) {
-        if isFirstResponder {
-            isFirstResponder = false
-        }
-    }
-
-    func viewDidBecomeFirstResponder(_ notification: Notification) {
-        if isFirstResponder && notification.viewResponderObserverId != id {
-            isFirstResponder = false
-        }
     }
 }

@@ -35,9 +35,12 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
+            .onReceive(
+                responderObserver.$isFirstResponder
+                    .delay(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            ) { isFirstResponder in
                 assignCustomSubmitToKeyboardForFirstResponder(for: responderObserver.view)
-                recoverCustomKeyboardViewIfNeeded(for: responderObserver.view)
+                recoverCustomKeyboardViewIfNeeded(isFirstResponder: isFirstResponder)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
@@ -55,10 +58,10 @@ public struct CustomKeyboardModifier: ViewModifier {
         }
     }
     
-    func recoverCustomKeyboardViewIfNeeded(for view: UIView?) {
-        if view?.isFirstResponder == true && !keyboardType.keyboardInputView.isVisible {
-            view?.resignFirstResponder()
-            view?.becomeFirstResponder()
+    func recoverCustomKeyboardViewIfNeeded(isFirstResponder: Bool) {
+        if isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+            responderObserver.view?.resignFirstResponder()
+            responderObserver.view?.becomeFirstResponder()
         }
     }
 }
