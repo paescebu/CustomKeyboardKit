@@ -27,7 +27,7 @@ public extension View {
 public struct CustomKeyboardModifier: ViewModifier {
     let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
-    @StateObject var responderObserver = ViewEditingStateObserver()
+    @StateObject var editStateObserver = ViewEditingStateObserver()
     
     public init(keyboardType: CustomKeyboard) {
         self.keyboardType = keyboardType
@@ -35,17 +35,17 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .onReceive(responderObserver.$isEditing) { isEditing in
+            .onReceive(editStateObserver.$isEditing) { isEditing in
                 assignCustomSubmitToKeyboardForEditingView(isEditing: isEditing)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
-                responderObserver.view = uiTextView
+                editStateObserver.view = uiTextView
                 recoverCustomKeyboardViewIfNeeded(for: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
-                responderObserver.view = uiTextField
+                editStateObserver.view = uiTextField
                 recoverCustomKeyboardViewIfNeeded(for: uiTextField)
             }
     }
@@ -59,8 +59,8 @@ public struct CustomKeyboardModifier: ViewModifier {
     func recoverCustomKeyboardViewIfNeeded(for view: UIView?) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             if view?.isFirstResponder == true && !keyboardType.keyboardInputView.isVisible {
-                responderObserver.view?.resignFirstResponder()
-                responderObserver.view?.becomeFirstResponder()
+                editStateObserver.view?.resignFirstResponder()
+                editStateObserver.view?.becomeFirstResponder()
             }
         }
     }
