@@ -27,7 +27,7 @@ public extension View {
 public struct CustomKeyboardModifier: ViewModifier {
     let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
-    @StateObject var responderObserver = ViewResponderObserver()
+    @StateObject var responderObserver = ViewEditingStateObserver()
     
     public init(keyboardType: CustomKeyboard) {
         self.keyboardType = keyboardType
@@ -35,8 +35,8 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
-                assignCustomSubmitToKeyboardForFirstResponder(for: responderObserver.view)
+            .onReceive(responderObserver.$isEditing) { isEditing in
+                assignCustomSubmitToKeyboardForEditingView(isEditing: isEditing)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
@@ -50,8 +50,8 @@ public struct CustomKeyboardModifier: ViewModifier {
             }
     }
     
-    func assignCustomSubmitToKeyboardForFirstResponder(for view: UIView?) {
-        if view?.isFirstResponder == true {
+    func assignCustomSubmitToKeyboardForEditingView(isEditing: Bool) {
+        if isEditing {
             keyboardType.onSubmit = onCustomSubmit
         }
     }

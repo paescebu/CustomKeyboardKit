@@ -1,5 +1,5 @@
 //
-//  ViewResponderObserver.swift
+//  ViewEditingStateObserver.swift
 //  CustomKeyboardKit
 //
 //  Created by Pascal Burlet on 29.09.2024.
@@ -9,8 +9,8 @@ import UIKit
 import Combine
 
 @MainActor
-class ViewResponderObserver: NSObject, ObservableObject, Identifiable {
-    @Published var isFirstResponder: Bool = false
+class ViewEditingStateObserver: NSObject, ObservableObject, Identifiable {
+    @Published var isEditing: Bool = false
     private var cancellables: Set<AnyCancellable> = []
 
     var view: UIView? {
@@ -28,13 +28,13 @@ class ViewResponderObserver: NSObject, ObservableObject, Identifiable {
             
             didBeginEditingPublisher
                 .sink { [weak self] _ in
-                    self?.isFirstResponder = true
+                    self?.isEditing = true
                 }
                 .store(in: &cancellables)
 
             didEndEditingPublisher
                 .sink { [weak self] _ in
-                    self?.isFirstResponder = false
+                    self?.isEditing = false
                 }
                 .store(in: &cancellables)
         }
@@ -47,13 +47,13 @@ class ViewResponderObserver: NSObject, ObservableObject, Identifiable {
             
             didBeginEditingPublisher
                 .sink { [weak self] _ in
-                    self?.isFirstResponder = true
+                    self?.isEditing = true
                 }
                 .store(in: &cancellables)
 
             didEndEditingPublisher
                 .sink { [weak self] _ in
-                    self?.isFirstResponder = false
+                    self?.isEditing = false
                 }
                 .store(in: &cancellables)
         }
