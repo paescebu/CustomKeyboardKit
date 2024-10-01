@@ -36,32 +36,29 @@ public struct CustomKeyboardModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
-                assignCustomSubmitToKeyboardForFirstResponder(isFirstResponder: isFirstResponder)
+                assignCustomSubmitToKeyboardForFirstResponder(for: responderObserver.view)
+                recoverCustomInputViewIfNeeded(for: responderObserver.view)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
                 responderObserver.view = uiTextView
-                recoverCustomInputViewIfNeeded(for: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
                 responderObserver.view = uiTextField
-                recoverCustomInputViewIfNeeded(for: uiTextField)
             }
     }
     
-    func assignCustomSubmitToKeyboardForFirstResponder(isFirstResponder: Bool) {
-        if isFirstResponder {
+    func assignCustomSubmitToKeyboardForFirstResponder(for view: UIView?) {
+        if view?.isFirstResponder == true {
             keyboardType.onSubmit = onCustomSubmit
         }
     }
     
-    func recoverCustomInputViewIfNeeded(for view: UIView) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
-                view.resignFirstResponder()
-                view.becomeFirstResponder()
-            }
+    func recoverCustomInputViewIfNeeded(for view: UIView?) {
+        if view?.isFirstResponder == true && !keyboardType.keyboardInputView.isVisible {
+            view?.resignFirstResponder()
+            view?.becomeFirstResponder()
         }
     }
 }
