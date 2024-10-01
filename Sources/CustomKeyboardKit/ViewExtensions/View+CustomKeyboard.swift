@@ -37,7 +37,6 @@ public struct CustomKeyboardModifier: ViewModifier {
         content
             .onReceive(responderObserver.$isFirstResponder) { isFirstResponder in
                 assignCustomSubmitToKeyboardForFirstResponder(for: responderObserver.view)
-                recoverCustomKeyboardViewIfNeeded(for: responderObserver.view)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
