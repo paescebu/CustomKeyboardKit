@@ -39,11 +39,9 @@ class ViewResponderObserver: NSObject, ObservableObject, UITextFieldDelegate, UI
     }
 
     @objc func keyboardWillShow(_ notification: Notification) {
-        if view?.isFirstResponder == true {
-            if !isFirstResponder {
-                isFirstResponder = true
-                NotificationCenter.default.post(name: .viewDidBecomeFirstResponder, object: nil, userInfo: [Notification.keyboardObserverIdKey : id ])
-            }
+        if !isFirstResponder && view?.isFirstResponder == true {
+            isFirstResponder = true
+            NotificationCenter.default.post(name: .viewDidBecomeFirstResponder, object: nil, userInfo: [Notification.keyboardObserverIdKey : id ])
         }
     }
     
@@ -54,7 +52,7 @@ class ViewResponderObserver: NSObject, ObservableObject, UITextFieldDelegate, UI
     }
 
     @objc func viewDidBecomeFirstResponder(_ notification: Notification) {
-        if notification.viewResponderObserverId != id {
+        if isFirstResponder && notification.viewResponderObserverId != id {
             isFirstResponder = false
         }
     }
