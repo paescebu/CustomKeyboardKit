@@ -21,11 +21,11 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
                 self.textView = textView
             }
         }
-        cancellables.removeAll()
         observeEditingState(for: textView)
     }
     
     private func observeEditingState<TextView: TextEditing>(for textView: TextView?) {
+        cancellables.removeAll()
         guard let textView else { return }
         
         let didBeginEditingPublisher = NotificationCenter.default.publisher(for: TextView.textDidBeginEditingNotification, object: textView)
