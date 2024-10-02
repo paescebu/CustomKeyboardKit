@@ -16,31 +16,23 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
     @Published private(set) var textView: UIView?
 
     func set<TextView: TextEditing>(textView: TextView) {
+        guard textView != self.textView else { return }
+        
         Task {
-            if textView != self.textView {
-                self.textView = textView
-            }
+            self.textView = textView
+            observeEditingState(for: textView)
         }
-        observeEditingState(for: textView)
     }
     
-    private func observeEditingState<TextView: TextEditing>(for textView: TextView?) {
+    private func observeEditingState<TextView: TextEditing>(for textView: TextView) {
         cancellables.removeAll()
-        guard let textView else { return }
         
-        let didBeginEditingPublisher = NotificationCenter.default.publisher(for: TextView.textDidBeginEditingNotification, object: textView)
-        let didEndEditingPublisher = NotificationCenter.default.publisher(for: TextView.textDidEndEditingNotification, object: textView)
-        
-        didBeginEditingPublisher
-            .sink { [weak self] _ in
-                self?.isEditing = true
-            }
-            .store(in: &cancellables)
-
-        didEndEditingPublisher
-            .sink { [weak self] _ in
-                self?.isEditing = false
-            }
+        let beginEditing = NotificationCenter.default.publisher(for: TextView.textDidBeginEditingNotification, object: textView)
+            .map { _ in true }
+        let endEditing = NotificationCenter.default.publisher(for: TextView.textDidEndEditingNotification, object: textView)
+            .map { _ in false }
+        Publishers.Merge(beginEditing, endEditing)
+            .assign(to: \.isEditing, on: self)
             .store(in: &cancellables)
     }
     
