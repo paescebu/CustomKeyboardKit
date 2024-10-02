@@ -27,7 +27,7 @@ public extension View {
 public struct CustomKeyboardModifier: ViewModifier {
     let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
-    @StateObject var editStateObserver = ViewEditingStateObserver()
+    @StateObject var textViewObserver = ActiveTextViewObserver()
     
     public init(keyboardType: CustomKeyboard) {
         self.keyboardType = keyboardType
@@ -35,18 +35,19 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .onReceive(editStateObserver.$isEditing) { isEditing in
+            .onReceive(textViewObserver.$isEditing) { isEditing in
                 assignCustomSubmitToKeyboardForEditingView(isEditing: isEditing)
+            }
+            .onChange(of: textViewObserver.view) { view in
+                recoverCustomKeyboardViewIfNeeded(for: view)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
-                editStateObserver.view = uiTextView
-                recoverCustomKeyboardViewIfNeeded(for: uiTextView)
+                textViewObserver.set(textView: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
-                editStateObserver.view = uiTextField
-                recoverCustomKeyboardViewIfNeeded(for: uiTextField)
+                textViewObserver.set(textView: uiTextField)
             }
     }
     
@@ -57,11 +58,11 @@ public struct CustomKeyboardModifier: ViewModifier {
     }
     
     func recoverCustomKeyboardViewIfNeeded(for view: UIView?) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            if view?.isFirstResponder == true && !keyboardType.keyboardInputView.isVisible {
-                editStateObserver.view?.resignFirstResponder()
-                editStateObserver.view?.becomeFirstResponder()
-            }
+        guard let view else { return }
+        
+        if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+            view.resignFirstResponder()
+            view.becomeFirstResponder()
         }
     }
 }
