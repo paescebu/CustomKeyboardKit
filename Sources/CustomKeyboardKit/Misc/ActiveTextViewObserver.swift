@@ -17,7 +17,9 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
 
     func set<TextView: TextEditing>(textView: TextView) {
         Task {
-            self.textView = textView
+            if textView != self.textView {
+                self.textView = textView
+            }
         }
         cancellables.removeAll()
         observeEditingState(for: textView)
