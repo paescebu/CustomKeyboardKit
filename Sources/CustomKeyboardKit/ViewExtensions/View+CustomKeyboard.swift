@@ -38,8 +38,8 @@ public struct CustomKeyboardModifier: ViewModifier {
             .onReceive(textViewObserver.$isEditing) { isEditing in
                 assignSubmitForEditingView(isEditing: isEditing)
             }
-            .onChange(of: textViewObserver.view) { view in
-                recoverCustomKeyboardIfNeeded(for: view)
+            .onChange(of: textViewObserver.textView) { textView in
+                recoverCustomKeyboardIfNeeded(for: textView)
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
