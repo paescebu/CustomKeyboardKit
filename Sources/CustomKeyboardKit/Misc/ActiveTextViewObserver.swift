@@ -31,6 +31,7 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
             .map { _ in true }
         let endEditing = NotificationCenter.default.publisher(for: TextView.textDidEndEditingNotification, object: textView)
             .map { _ in false }
+        
         Publishers.Merge(beginEditing, endEditing)
             .assign(to: \.isEditing, on: self)
             .store(in: &cancellables)
