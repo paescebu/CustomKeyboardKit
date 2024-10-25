@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
@@ -24,23 +25,40 @@ public extension View {
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
+    let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
-    @StateObject var keyboardType: CustomKeyboard
+    @StateObject var textViewObserver = ActiveTextViewObserver()
     
     public init(keyboardType: CustomKeyboard) {
-        self._keyboardType = StateObject(wrappedValue: keyboardType)
+        self.keyboardType = keyboardType
     }
     
     public func body(content: Content) -> some View {
         content
-            .onAppear {
-                keyboardType.onSubmit = onCustomSubmit
-            }
+            .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
+            .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
+                textViewObserver.set(textView: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
                 uiTextField.inputView = keyboardType.keyboardInputView
+                textViewObserver.set(textView: uiTextField)
             }
+    }
+    
+    func assignSubmitForEditingView(isEditing: Bool) {
+        if isEditing {
+            keyboardType.onSubmit = onCustomSubmit
+        }
+    }
+    
+    func recoverCustomKeyboardIfNeeded(for view: UIView?) {
+        guard let view else { return }
+        
+        if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+            view.resignFirstResponder()
+            view.becomeFirstResponder()
+        }
     }
 }

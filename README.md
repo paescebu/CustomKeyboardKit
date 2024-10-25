@@ -17,7 +17,7 @@ I sincerely hope with this package I managed to deliver pretty much unrestricted
 - Works with the native `onSubmit` modifier, but behaviour can be fully customized by using `onCustomSubmit` instead
 
 ## Creating the Keyboard
-Simply extend the CustomKeyboard class and provide a static computed property and use the CustomKeyboardBuilder, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
+Simply extend the CustomKeyboard class and provide a static CustomKeyboard (or CustomKeyboardBuilder) instance, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
 ```swift
 extension CustomKeyboard {
     static var yesnt: CustomKeyboard {
