@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import SwiftUI
-import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
@@ -25,12 +24,11 @@ public extension View {
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
-    let keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
     
     public init(keyboardType: CustomKeyboard) {
-        self.keyboardType = keyboardType
+        self._keyboardType = StateObject(wrappedValue: keyboardType)
     }
     
     public func body(content: Content) -> some View {

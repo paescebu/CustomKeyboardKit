@@ -20,33 +20,35 @@ I sincerely hope with this package I managed to deliver pretty much unrestricted
 Simply extend the CustomKeyboard class and provide a static CustomKeyboard (or CustomKeyboardBuilder) instance, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
 ```swift
 extension CustomKeyboard {
-    static let yesnt = CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
-        VStack {
-            HStack {
-                Button("Yes!") {
-                    textDocumentProxy.insertText("Yes")
+    static var yesnt: CustomKeyboard {
+        CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+            VStack {
+                HStack {
+                    Button("Yes!") {
+                        textDocumentProxy.insertText("Yes")
+                        playSystemFeedback?()
+                    }
+                    Button("No!") {
+                        textDocumentProxy.insertText("No")
+                        playSystemFeedback?()
+                    }
+                }
+                Button("Maybe") {
+                    textDocumentProxy.insertText("?")
                     playSystemFeedback?()
                 }
-                Button("No!") {
-                    textDocumentProxy.insertText("No")
+                Button("Idk") {
+                    textDocumentProxy.insertText("Idk")
                     playSystemFeedback?()
                 }
+                Button("Can you repeat the question?") {
+                    playSystemFeedback?()
+                    submit()
+                }
             }
-            Button("Maybe") {
-                textDocumentProxy.insertText("?")
-                playSystemFeedback?()
-            }
-            Button("Idk") {
-                textDocumentProxy.insertText("Idk")
-                playSystemFeedback?()
-            }
-            Button("Can you repeat the question?") {
-                playSystemFeedback?()
-                submit()
-            }
+            .buttonStyle(.bordered)
+            .padding()
         }
-        .buttonStyle(.bordered)
-        .padding()
     }
 }
 ```
@@ -163,25 +165,27 @@ struct ContentView: View {
 }
 
 extension CustomKeyboard {
-    static let alphabet = CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
-        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { $0 }
-        let gridItem = GridItem.init(.adaptive(minimum: 25))
+    static var alphabet: CustomKeyboard {
+        CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { $0 }
+            let gridItem = GridItem.init(.adaptive(minimum: 25))
 
-        return LazyVGrid(columns: [gridItem], spacing: 5) {
-            ForEach(letters, id: \.self) { char in
-                Button(char.uppercased()) {
-                    textDocumentProxy.insertText("\(char)")
-                    playSystemFeedback?()
+            return LazyVGrid(columns: [gridItem], spacing: 5) {
+                ForEach(letters, id: \.self) { char in
+                    Button(char.uppercased()) {
+                        textDocumentProxy.insertText("\(char)")
+                        playSystemFeedback?()
+                    }
+                    .frame(width: 25, height: 40)
+                    .background(Color.white)
+                    .foregroundColor(Color.black)
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
                 }
-                .frame(width: 25, height: 40)
-                .background(Color.white)
-                .foregroundColor(Color.black)
-                .cornerRadius(8)
-                .shadow(radius: 2)
             }
+            .frame(height: 150)
+            .padding()
         }
-        .frame(height: 150)
-        .padding()
     }
 }
 ```
