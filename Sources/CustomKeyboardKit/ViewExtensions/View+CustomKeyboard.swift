@@ -12,7 +12,7 @@ import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
-    func customKeyboard(view: @escaping (UITextDocumentProxy, CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
+    func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
         customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
     }
 }
