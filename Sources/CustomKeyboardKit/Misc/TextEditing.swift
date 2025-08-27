@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol TextEditing: UIResponder {
+protocol TextEditing: UIView {
     static var textDidBeginEditingNotification: Notification.Name { get }
     static var textDidEndEditingNotification: Notification.Name { get }
     var inputView: UIView? { get set }

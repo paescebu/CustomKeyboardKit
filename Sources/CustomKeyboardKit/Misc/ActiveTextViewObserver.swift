@@ -16,19 +16,11 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
     @Published private(set) var textView: (any TextEditing)?
 
     func set<TextView: TextEditing>(textView: TextView) {
-        if self.textView == nil {
-            Task {
-                self.textView = textView
-                observeEditingState(for: textView)
-            }
-            return
-        }
+        guard self.textView == nil || textView != self.textView! else { return }
         
-        if textView == self.textView! {
-            Task {
-                self.textView = textView
-                observeEditingState(for: textView)
-            }
+        Task {
+            self.textView = textView
+            observeEditingState(for: textView)
         }
     }
     
