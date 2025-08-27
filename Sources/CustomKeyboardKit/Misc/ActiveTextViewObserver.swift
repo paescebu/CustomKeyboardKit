@@ -13,14 +13,22 @@ class ActiveTextViewObserver: NSObject, ObservableObject, Identifiable {
     private var cancellables: Set<AnyCancellable> = []
 
     @Published private(set) var isEditing: Bool = false
-    @Published private(set) var textView: UIView?
+    @Published private(set) var textView: (any TextEditing)?
 
     func set<TextView: TextEditing>(textView: TextView) {
-        guard textView != self.textView else { return }
+        if self.textView == nil {
+            Task {
+                self.textView = textView
+                observeEditingState(for: textView)
+            }
+            return
+        }
         
-        Task {
-            self.textView = textView
-            observeEditingState(for: textView)
+        if textView == self.textView! {
+            Task {
+                self.textView = textView
+                observeEditingState(for: textView)
+            }
         }
     }
     

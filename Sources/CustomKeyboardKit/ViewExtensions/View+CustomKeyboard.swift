@@ -13,30 +13,39 @@ import Combine
 
 public extension View {
     func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
-        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
+        customKeyboard(.constant(CustomKeyboardBuilder(customKeyboardView: view)))
     }
 }
 
 public extension View {
     func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
         self
-            .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
+            .modifier(CustomDynamicKeyboardModifier(keyboardType: .constant(keyboardType)))
+    }
+    
+    func customKeyboard(_ keyboardType: Binding<CustomKeyboard>) -> some View {
+        self
+            .modifier(CustomDynamicKeyboardModifier(keyboardType: keyboardType))
     }
 }
 
-public struct CustomKeyboardModifier: ViewModifier {
-    let keyboardType: CustomKeyboard
+public struct CustomDynamicKeyboardModifier: ViewModifier {
+    @Binding var keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
-    
-    public init(keyboardType: CustomKeyboard) {
-        self.keyboardType = keyboardType
+
+    public init(keyboardType: Binding<CustomKeyboard>) {
+        self._keyboardType = keyboardType
     }
     
     public func body(content: Content) -> some View {
         content
             .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
+            .onChange(of: keyboardType) { newValue in
+                textViewObserver.textView?.inputView = newValue.keyboardInputView
+                textViewObserver.textView?.reloadInputViews()
+            }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 uiTextView.inputView = keyboardType.keyboardInputView
                 textViewObserver.set(textView: uiTextView)
@@ -53,7 +62,7 @@ public struct CustomKeyboardModifier: ViewModifier {
         }
     }
     
-    func recoverCustomKeyboardIfNeeded(for view: UIView?) {
+    func recoverCustomKeyboardIfNeeded(for view: UIResponder?) {
         guard let view else { return }
         
         if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
