@@ -12,25 +12,25 @@ import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
-    func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
-        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
-    }
+//    func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
+//        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
+//    }
 }
 
 public extension View {
-    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
+    func customKeyboard(_ keyboardType: Binding<CustomKeyboard?>) -> some View {
         self
             .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
     }
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
-    let keyboardType: CustomKeyboard
+    @Binding var keyboardType: CustomKeyboard?
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
     
-    public init(keyboardType: CustomKeyboard) {
-        self.keyboardType = keyboardType
+    public init(keyboardType: Binding<CustomKeyboard?>) {
+        self._keyboardType = keyboardType
     }
     
     public func body(content: Content) -> some View {
@@ -38,29 +38,29 @@ public struct CustomKeyboardModifier: ViewModifier {
             .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
-                textViewObserver.textView?.inputView = newKeyboard.keyboardInputView
+                textViewObserver.textView?.inputView = newKeyboard?.keyboardInputView
                 textViewObserver.textView?.reloadInputViews()
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
-                uiTextView.inputView = keyboardType.keyboardInputView
+                uiTextView.inputView = keyboardType?.keyboardInputView
                 textViewObserver.set(textView: uiTextView)
             }
             .introspect(.textField, on: .iOS(.v15...)) { uiTextField in
-                uiTextField.inputView = keyboardType.keyboardInputView
+                uiTextField.inputView = keyboardType?.keyboardInputView
                 textViewObserver.set(textView: uiTextField)
             }
     }
     
     func assignSubmitForEditingView(isEditing: Bool) {
         if isEditing {
-            keyboardType.onSubmit = onCustomSubmit
+            keyboardType?.onSubmit = onCustomSubmit
         }
     }
     
     func recoverCustomKeyboardIfNeeded(for view: UIView?) {
         guard let view else { return }
         
-        if view.isFirstResponder && !keyboardType.keyboardInputView.isVisible {
+        if view.isFirstResponder && !(keyboardType?.keyboardInputView.isVisible ?? false) {
             view.resignFirstResponder()
             view.becomeFirstResponder()
         }
