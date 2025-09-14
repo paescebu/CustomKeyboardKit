@@ -67,6 +67,7 @@ public struct CustomKeyboardModifier: ViewModifier {
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
                 switchKeyboard(to: newKeyboard, on: textViewObserver.textView)
+                textViewObserver.textView?.reloadInputViews()
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 switchKeyboard(to: keyboardType, on: uiTextView)
@@ -86,10 +87,8 @@ public struct CustomKeyboardModifier: ViewModifier {
         case let customKeyboard as CustomKeyboard:
             textView?.inputView = customKeyboard.keyboardInputView
         default:
-            textView?.keyboardType = .alphabet
             textView?.inputView = nil
         }
-        textView?.reloadInputViews()
     }
     
     func assignSubmitForEditingView(isEditing: Bool) {
