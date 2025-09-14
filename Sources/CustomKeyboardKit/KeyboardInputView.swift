@@ -12,15 +12,12 @@ import UIKit
 public class KeyboardInputView: UIView, UIInputViewAudioFeedback {
     var keyboardUIView: UIView
     
-    var isVisible: Bool {
-        keyboardUIView.window != nil
-    }
-    
     public var enableInputClicksWhenVisible: Bool {
         true
     }
     
-    init(keyboardUIView: UIView) {
+    init?(keyboardUIView: UIView?) {
+        guard let keyboardUIView else { return nil }
         self.keyboardUIView = keyboardUIView
         keyboardUIView.backgroundColor = .clear
         keyboardUIView.translatesAutoresizingMaskIntoConstraints = false
