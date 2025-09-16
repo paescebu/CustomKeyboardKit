@@ -20,44 +20,25 @@ public extension View {
 
 public extension View {
     @available(*, deprecated, message: "Use keyboardType(_:) overload instead.")
-    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
+    func customKeyboard(_ keyboardType: Keyboard) -> some View {
         self
-            .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
+            .modifier(KeyboardModifier(keyboardType: keyboardType))
     }
 }
 
 public extension View {
-    func keyboardType(_ keyboardType: CustomKeyboard) -> some View {
+    func keyboardType(_ keyboardType: Keyboard) -> some View {
         self
-            .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
+            .modifier(KeyboardModifier(keyboardType: keyboardType))
     }
 }
 
-public extension CustomKeyboard {
-    static func system(_ keyboardType: UIKeyboardType) -> CustomKeyboard {
-        SystemKeyboard(keyboardType: keyboardType)
-    }
-}
-
-public class SystemKeyboard: CustomKeyboard {
-    let keyboardType: UIKeyboardType
-    
-    init(keyboardType: UIKeyboardType) {
-        self.keyboardType = keyboardType
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-public struct CustomKeyboardModifier: ViewModifier {
-    var keyboardType: CustomKeyboard
+public struct KeyboardModifier: ViewModifier {
+    var keyboardType: Keyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
     
-    public init(keyboardType: CustomKeyboard) {
+    public init(keyboardType: Keyboard) {
         self.keyboardType = keyboardType
     }
     
@@ -79,12 +60,12 @@ public struct CustomKeyboardModifier: ViewModifier {
             }
     }
     
-    private func switchKeyboard(to keyboard: CustomKeyboard?, on textView: (any TextEditing)?) {
+    private func switchKeyboard(to keyboard: Keyboard, on textView: (any TextEditing)?) {
         switch keyboard {
         case let systemKeyboard as SystemKeyboard:
             textView?.inputView = nil
             textView?.keyboardType = systemKeyboard.keyboardType
-        case let customKeyboard as CustomKeyboard:
+        case let customKeyboard as Keyboard:
             textView?.inputView = customKeyboard.keyboardInputView
         default:
             textView?.inputView = nil

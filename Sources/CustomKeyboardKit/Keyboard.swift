@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 import SwiftUI
 
-public class CustomKeyboard: UIInputViewController {
-    public typealias SubmitHandler = () -> ()
-    public typealias SystemFeedbackHandler = () -> ()
+public class Keyboard: UIInputViewController {
+    public typealias SubmitHandler = () -> Void
+    public typealias SystemFeedbackHandler = () -> Void
     
     public private(set) lazy var keyboardInputView: KeyboardInputView? = KeyboardInputView(keyboardUIView: keyboardView)
     public var onSubmit: SubmitHandler? = nil
