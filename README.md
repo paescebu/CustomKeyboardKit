@@ -17,10 +17,10 @@ I sincerely hope with this package I managed to deliver pretty much unrestricted
 - Works with the native `onSubmit` modifier, but behaviour can be fully customized by using `onCustomSubmit` instead
 
 ## Creating the Keyboard
-Simply extend the CustomKeyboard class and provide a static CustomKeyboard (or CustomKeyboardBuilder) instance, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
+Simply extend the `Keyboard` class and provide a static Keyboard (or CustomKeyboard) instance, additionally use the `UITextDocumentProxy` instance to modify/delete the focused text and move the cursor. Use the playSystemFeedback closure to play system sounds on `Button` presses. See the example below: 
 ```swift
-extension CustomKeyboard {
-    static let yesnt = CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+extension Keyboard {
+    static let yesnt = CustomKeyboard { textDocumentProxy, submit, playSystemFeedback in
         VStack {
             HStack {
                 Button("Yes!") {
@@ -52,7 +52,7 @@ extension CustomKeyboard {
 ```
 
 ## Using Your Custom Keyboard In SwiftUI
-Once declared, you can use the custom keyboard with the `.customKeyboard(:)` View modifer and using your statically defined property
+Once declared, you can use the custom keyboard with the `.keyboardType(:)` View modifer and using your statically defined property
 ```swift
 struct ContentView: View {
     @State var text: String = ""
@@ -61,7 +61,7 @@ struct ContentView: View {
         VStack {
             Text(text)
             TextField("", text: $text)
-                .customKeyboard(.yesnt)
+                .keyboardType(.yesnt)
         }
     }
 }
@@ -78,7 +78,7 @@ struct ContentView: View {
         VStack {
             Text(text)
             TextField("", text: $text)
-                .customKeyboard(.yesnt)
+                .keyboardType(.yesnt)
                 .onCustomSubmit {
                     print("do something when SubmitHandler has been called")
                 }
@@ -90,12 +90,12 @@ struct ContentView: View {
 If both modifiers are used `onCustomSubmit` takes precedence over `onSubmit` and performs the closure inside `onCustomSubmit` only. So please make sure to only use one of the two ideally.
 
 ## Using Your Custom Keyboard In UIKit
-Once declared, you can assign your `CustomKeyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
+Once declared, you can assign your `Keyboard`'s `keyboardInputView` property to the UITextFields `inputView`.
 ```swift
 override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
-    let customKeyboard =  CustomKeyboard.yesnt
+    let customKeyboard =  Keyboard.yesnt
     customKeyboard.onSubmit = { print("do something when SubmitHandler called") }
 
     myTextField.inputView = customKeyboard.keyboardInputView
@@ -103,7 +103,7 @@ override func viewDidLoad() {
 ```
 
 ## Alternative direct SwiftUI use:
-You can also directly use the `customKeyboard(view:)` modifier that allows you to build the custom keyboard within the view body itself, if you need to access some View properties or constants etc. 
+You can also directly use the `keyboardType(view:)` modifier that allows you to build the custom keyboard within the view body itself, if you need to access some View properties or constants etc. 
 Example:
 ```swift
 struct ContentView: View {
@@ -111,7 +111,7 @@ struct ContentView: View {
     
     var body: some View {
         TextField("", text: $text)
-            .customKeyboard { textDocumentProxy, onSubmit, playFeedback in
+            .keyboardType { textDocumentProxy, onSubmit, playFeedback in
                 VStack {
                     numberButton(text: "1", uiTextDocumentProxy: textDocumentProxy, playFeedback: playFeedback)
                     numberButton(text: "2", uiTextDocumentProxy: textDocumentProxy, playFeedback: playFeedback)
@@ -148,11 +148,11 @@ struct ContentView: View {
         VStack {
             Group {
                 TextField("ABC", text: $text0)
-                    .customKeyboard(.alphabet)
+                    .keyboardType(.alphabet)
                 TextField("Numpad", text: $text1)
                     .keyboardType(.numberPad)
                 TextField("ABC", text: $text2)
-                    .customKeyboard(.alphabet)
+                    .keyboardType(.alphabet)
                 TextField("Normal", text: $text3)
                     //normal keyboard
             }
@@ -162,8 +162,8 @@ struct ContentView: View {
     }
 }
 
-extension CustomKeyboard {
-    static let alphabet = CustomKeyboardBuilder { textDocumentProxy, submit, playSystemFeedback in
+extension Keyboard {
+    static let alphabet = CustomKeyboard { textDocumentProxy, submit, playSystemFeedback in
         let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { $0 }
         let gridItem = GridItem.init(.adaptive(minimum: 25))
 

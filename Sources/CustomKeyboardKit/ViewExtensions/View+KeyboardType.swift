@@ -12,14 +12,19 @@ import Combine
 @_spi(Advanced) import SwiftUIIntrospect
 
 public extension View {
-    func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboardBuilder.SubmitHandler, CustomKeyboardBuilder.SystemFeedbackHandler?) -> some View) -> some View {
-        customKeyboard(CustomKeyboardBuilder(customKeyboardView: view))
+    @available(*, deprecated, message: "Use the keyboardType(_:) overload instead.")
+    func customKeyboard(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboard.SubmitHandler, CustomKeyboard.SystemFeedbackHandler?) -> some View) -> some View {
+        customKeyboard(CustomKeyboard(customKeyboardView: view))
+    }
+    
+    func keyboardType(view: @escaping (UITextDocumentProxy, @escaping CustomKeyboard.SubmitHandler, CustomKeyboard.SystemFeedbackHandler?) -> some View) -> some View {
+        customKeyboard(CustomKeyboard(customKeyboardView: view))
     }
 }
 
 
 public extension View {
-    @available(*, deprecated, message: "Use keyboardType(_:) overload instead.")
+    @available(*, deprecated, message: "Use the keyboardType(_:) overload instead.")
     func customKeyboard(_ keyboardType: Keyboard) -> some View {
         self
             .modifier(KeyboardModifier(keyboardType: keyboardType))

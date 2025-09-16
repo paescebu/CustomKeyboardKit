@@ -20,14 +20,6 @@ public extension EnvironmentValues {
 }
 
 public extension View {
-    @available(*, deprecated, renamed: "onCustomSubmit(action:)")
-    func onSubmitCustomKeyboard(action: @escaping () -> Void) -> some View {
-        self
-            .onCustomSubmit(action: action)
-    }
-}
-
-public extension View {
     func onCustomSubmit(action: @escaping Keyboard.SubmitHandler) -> some View {
         self
             .environment(\.onCustomSubmit, action)
