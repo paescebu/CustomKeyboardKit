@@ -20,14 +20,14 @@ public extension View {
 
 public extension View {
     @available(*, deprecated, message: "Use keyboardType(_:) overload instead.")
-    func customKeyboard(_ keyboardType: CustomKeyboard?) -> some View {
+    func customKeyboard(_ keyboardType: CustomKeyboard) -> some View {
         self
             .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
     }
 }
 
 public extension View {
-    func keyboardType(_ keyboardType: CustomKeyboard?) -> some View {
+    func keyboardType(_ keyboardType: CustomKeyboard) -> some View {
         self
             .modifier(CustomKeyboardModifier(keyboardType: keyboardType))
     }
@@ -53,11 +53,11 @@ public class SystemKeyboard: CustomKeyboard {
 }
 
 public struct CustomKeyboardModifier: ViewModifier {
-    var keyboardType: CustomKeyboard?
+    var keyboardType: CustomKeyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
     
-    public init(keyboardType: CustomKeyboard?) {
+    public init(keyboardType: CustomKeyboard) {
         self.keyboardType = keyboardType
     }
     
@@ -93,14 +93,14 @@ public struct CustomKeyboardModifier: ViewModifier {
     
     func assignSubmitForEditingView(isEditing: Bool) {
         if isEditing {
-            keyboardType?.onSubmit = onCustomSubmit
+            keyboardType.onSubmit = onCustomSubmit
         }
     }
     
     func recoverCustomKeyboardIfNeeded(for view: UIView?) {
         guard let view else { return }
         
-        if view.isFirstResponder && !(keyboardType?.view.isVisible ?? false) {
+        if view.isFirstResponder && !keyboardType.view.isVisible {
             view.resignFirstResponder()
             view.becomeFirstResponder()
         }

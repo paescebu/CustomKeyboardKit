@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-public class CustomKeyboard: UIInputViewController, ObservableObject {
+public class CustomKeyboard: UIInputViewController {
     public typealias SubmitHandler = () -> ()
     public typealias SystemFeedbackHandler = () -> ()
     
