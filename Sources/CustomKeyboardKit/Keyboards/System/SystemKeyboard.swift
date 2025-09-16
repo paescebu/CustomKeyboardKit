@@ -14,7 +14,7 @@ public extension Keyboard {
     }
 }
 
-public class SystemKeyboard: Keyboard {
+internal class SystemKeyboard: Keyboard {
     let keyboardType: UIKeyboardType
     
     init(keyboardType: UIKeyboardType) {
