@@ -34,7 +34,6 @@ public extension View {
 public extension View {
     func keyboardType(_ keyboardType: Keyboard) -> some View {
         self
-            .keyboardType(KeyboardModifier.lastNativeKeyboardType)
             .modifier(KeyboardModifier(keyboardType: keyboardType))
     }
 }
@@ -43,13 +42,16 @@ public struct KeyboardModifier: ViewModifier {
     var keyboardType: Keyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
+    
     static var lastNativeKeyboardType: UIKeyboardType = .alphabet
+    
     public init(keyboardType: Keyboard) {
         self.keyboardType = keyboardType
     }
     
     public func body(content: Content) -> some View {
         content
+            .keyboardType(KeyboardModifier.lastNativeKeyboardType)
             .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
