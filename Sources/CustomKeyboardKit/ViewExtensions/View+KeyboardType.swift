@@ -42,8 +42,7 @@ public struct KeyboardModifier: ViewModifier {
     var keyboardType: Keyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
-    
-    static var lastNativeKeyboardType: UIKeyboardType = .alphabet
+    @State var lastNativekeyboardType: UIKeyboardType? = nil
     
     public init(keyboardType: Keyboard) {
         self.keyboardType = keyboardType
@@ -51,12 +50,12 @@ public struct KeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .keyboardType(KeyboardModifier.lastNativeKeyboardType)
+            .keyboardType(lastNativekeyboardType ?? .alphabet)
             .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
                 switchKeyboard(to: newKeyboard, on: textViewObserver.textView)
-                Self.lastNativeKeyboardType = textViewObserver.textView?.keyboardType ?? .alphabet
+                lastNativekeyboardType = textViewObserver.textView?.keyboardType
                 textViewObserver.textView?.reloadInputViews()
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
