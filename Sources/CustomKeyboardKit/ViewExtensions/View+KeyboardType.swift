@@ -27,13 +27,14 @@ public extension View {
     @available(*, deprecated, message: "Use the keyboardType(_:) overload instead.")
     func customKeyboard(_ keyboardType: Keyboard) -> some View {
         self
-            .modifier(KeyboardModifier(keyboardType: keyboardType))
+            .keyboardType(keyboardType)
     }
 }
 
 public extension View {
     func keyboardType(_ keyboardType: Keyboard) -> some View {
         self
+            .keyboardType(KeyboardModifier.lastNativeKeyboardType)
             .modifier(KeyboardModifier(keyboardType: keyboardType))
     }
 }
@@ -42,7 +43,7 @@ public struct KeyboardModifier: ViewModifier {
     var keyboardType: Keyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
-    
+    static var lastNativeKeyboardType: UIKeyboardType = .alphabet
     public init(keyboardType: Keyboard) {
         self.keyboardType = keyboardType
     }
@@ -53,6 +54,7 @@ public struct KeyboardModifier: ViewModifier {
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
                 switchKeyboard(to: newKeyboard, on: textViewObserver.textView)
+                Self.lastNativeKeyboardType = textViewObserver.textView?.keyboardType ?? .alphabet
                 textViewObserver.textView?.reloadInputViews()
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
@@ -90,5 +92,60 @@ public struct KeyboardModifier: ViewModifier {
             view.resignFirstResponder()
             view.becomeFirstResponder()
         }
+    }
+}
+
+// MARK: - ViewModifier to expose underlying UITextField
+struct UITextFieldResolverModifier: ViewModifier {
+    var onResolve: (UITextField) -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .background(ResolverView(onResolve: onResolve))
+    }
+
+    private struct ResolverView: UIViewRepresentable {
+        var onResolve: (UITextField) -> Void
+
+        func makeUIView(context: Context) -> UIView {
+            let view = UIView()
+            DispatchQueue.main.async {
+                if let tf = findTextField(from: view) {
+                    onResolve(tf)
+                }
+            }
+            return view
+        }
+
+        func updateUIView(_ uiView: UIView, context: Context) {}
+
+        private func findTextField(from view: UIView) -> UITextField? {
+            // Step 1: go up to parent to escape SwiftUI wrapper layers
+            var parent: UIView? = view
+            while let superview = parent?.superview {
+                parent = superview
+            }
+            guard let root = parent else { return nil }
+
+            // Step 2: recursively search down all subviews
+            return searchSubviews(root)
+        }
+
+        private func searchSubviews(_ view: UIView) -> UITextField? {
+            if let tf = view as? UITextField { return tf }
+            for subview in view.subviews {
+                if let found = searchSubviews(subview) {
+                    return found
+                }
+            }
+            return nil
+        }
+    }
+}
+
+// MARK: - Convenience extension
+extension View {
+    func resolveUITextField(_ callback: @escaping (UITextField) -> Void) -> some View {
+        modifier(UITextFieldResolverModifier(onResolve: callback))
     }
 }
