@@ -42,7 +42,6 @@ public struct KeyboardModifier: ViewModifier {
     let keyboardType: Keyboard
     @Environment(\.onCustomSubmit) var onCustomSubmit
     @StateObject var textViewObserver = ActiveTextViewObserver()
-    static var lastNativeKeyboard: UIKeyboardType? = nil
     
     public init(keyboardType: Keyboard) {
         self.keyboardType = keyboardType
@@ -50,12 +49,10 @@ public struct KeyboardModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         content
-            .keyboardType(Self.lastNativeKeyboard ?? textViewObserver.textView?.keyboardType ?? .alphabet)
             .onReceive(textViewObserver.$isEditing, perform: assignSubmitForEditingView)
             .onChange(of: textViewObserver.textView, perform: recoverCustomKeyboardIfNeeded)
             .onChange(of: keyboardType) { newKeyboard in
                 switchKeyboard(to: newKeyboard, on: textViewObserver.textView)
-                textViewObserver.textView?.reloadInputViews()
             }
             .introspect(.textEditor, on: .iOS(.v15...)) { uiTextView in
                 switchKeyboard(to: keyboardType, on: uiTextView)
@@ -68,15 +65,17 @@ public struct KeyboardModifier: ViewModifier {
     }
     
     private func switchKeyboard(to keyboard: Keyboard, on textView: (any TextEditing)?) {
-        switch keyboard {
-        case let systemKeyboard as SystemKeyboard:
-            textView?.inputView = nil
-            textView?.keyboardType = systemKeyboard.keyboardType
-            Self.lastNativeKeyboard = systemKeyboard.keyboardType
-        case let customKeyboard as Keyboard:
-            textView?.inputView = customKeyboard.keyboardInputView
-        default:
-            textView?.inputView = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            switch keyboard {
+            case let systemKeyboard as SystemKeyboard:
+                textView?.inputView = nil
+                textView?.keyboardType = systemKeyboard.keyboardType
+            case let customKeyboard as Keyboard:
+                textView?.inputView = customKeyboard.keyboardInputView
+            default:
+                textView?.inputView = nil
+            }
+            textView?.reloadInputViews()
         }
     }
     
