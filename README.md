@@ -1,8 +1,8 @@
 # CustomKeyboardKit
-I strongly believe that any in app keyboard layout is best built in SwiftUI, no matter if its used in SwiftUI or UIKit. 
-With that lightweight package I think I offer you the necessary tools to do so in the UI Framework that we all started to embrace and love. SwiftUI!
+I strongly believe that any in-app keyboard layout is best built in SwiftUI, no matter if its used in SwiftUI or UIKit. 
+With this lightweight package, I offer you the necessary tools to do so in the UI framework we’ve all started to embrace and love: SwiftUI!
 
-My goal is to keep this framework as lightweight as it is, to not add bloat to it with features most people do not need. This ensures keeping the complexity of the package at its minimum, which translates to a certain stability and reliability. 
+My goal is to keep this framework as lightweight as it is, to avoid adding bloat with features most people don’t need. This ensures keeping the complexity of the package at its minimum, which translates to a certain stability and reliability. 
 I sincerely hope with this package I managed to deliver pretty much unrestricted possibilities for you.
 
 ## Features
@@ -10,8 +10,8 @@ I sincerely hope with this package I managed to deliver pretty much unrestricted
     - Doesn't even have to be a keyboard, **build literally anything that pops up for focused text fields!**
 - Can play native iOS/iPadOS keyboard sounds and haptic feedback
 - Use it in UIKit or SwiftUI
-- Interact with the focused text using the UITextDocumentProxy closure parameter
-- Use it parallelly to any native keyboard
+- Interact with the focused text via the UITextDocumentProxy closure parameter
+- Use it in parallel to any native keyboard
 - Works with SwiftUI's new `scrollDismissesKeyboard(:)` modifiers etc.
 - Works flawlessly on iOS and iPadOS
 - Works with the native `onSubmit` modifier, but behaviour can be fully customized by using `onCustomSubmit` instead
@@ -71,7 +71,7 @@ struct ContentView: View {
 
 ## About Customizing The Submit Button Tap Behaviour
 The custom keyboard supports the native `onSubmit` modifier to pass a closure to perform actions after the submit button has been tapped.
-In order to fully customize the behaviour of the submit button to not follow the native behaviour (e.g. not closing the keyboard) the `onCustomSubmit` modifier shall be used.
+In order to fully customize the behaviour of the submit button to not follow the native behaviour (e.g. not closing the keyboard) the `onCustomSubmit` modifier should be used.
 ```swift
 struct ContentView: View {
     @State var text: String = ""
@@ -104,7 +104,7 @@ override func viewDidLoad() {
 }
 ```
 
-## Alternative direct SwiftUI use:
+## Alternative Direct SwiftUI Use:
 You can also directly use the `keyboardType(view:)` modifier that allows you to build the custom keyboard within the view body itself, if you need to access some View properties or constants etc. 
 Example:
 ```swift
@@ -133,7 +133,7 @@ struct ContentView: View {
     }
 }
 ```
-This works equally with `TextEditor`
+This works just as well with `TextEditor`
 
 ## Dynamically Switching Keyboards
 You can also switch between keyboards dynamically at runtime by binding the `.keyboardType` to some state. For example, toggling between the system number pad and your own `.yesnt` keyboard:
@@ -156,7 +156,7 @@ struct ContentView: View {
 
 
 ## Complete Example
-Check out the video below for the following example code and see how it works perfectly side by side with native keyboards.
+Check out the video below for the following example code and see how it works perfectly side-by-side with native keyboards.
 
 ```swift
 struct ContentView: View {
@@ -210,7 +210,7 @@ extension Keyboard {
 https://user-images.githubusercontent.com/59558722/204609124-b99b0d8d-f38f-42d3-afa5-cbf7e72e86c8.mp4
 
 ## Warranty
-The code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
+This code comes with no warranty of any kind. I hope it'll be useful to you (it certainly is to me), but I make no guarantees regarding its functionality or otherwise.
 
 ## Donations
 You really don't have to pay anything to use this package. But if you feel generous today and would like to donate because this package helped you so much, here's a PayPal donation link:
