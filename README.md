@@ -52,7 +52,9 @@ extension Keyboard {
 ```
 
 ## Using Your Custom Keyboard In SwiftUI
-Once declared, you can use the custom keyboard with the `.keyboardType(:)` View modifer and using your statically defined property
+Once declared, you can use the custom keyboard with the `.keyboardType(:)` View modifer and using your statically defined property.
+The .keyboardType modifier is overloading Apple’s native API with UIKeyboardType values (like .numberPad) to also support your own custom keyboards (like .yesnt).
+This ties seamlessly into the familiar SwiftUI API, so you don’t have to learn a new modifier or break existing code — you just get more flexibility.
 ```swift
 struct ContentView: View {
     @State var text: String = ""
@@ -132,6 +134,25 @@ struct ContentView: View {
 }
 ```
 This works equally with `TextEditor`
+
+## Dynamically Switching Keyboards
+You can also switch between keyboards dynamically at runtime by binding the `.keyboardType` to some state. For example, toggling between the system number pad and your own `.yesnt` keyboard:
+
+```swift
+struct ContentView: View {
+    @State private var text = ""
+    @State private var useCustom = false
+
+    var body: some View {
+        VStack {
+            Toggle("Use Custom Keyboard", isOn: $useCustom)
+                .padding()
+
+            TextField("Enter text", text: $text)
+                .keyboardType(useCustom ? .yesnt : .system(.numberPad))
+        }
+    }
+}
 
 
 ## Complete Example
