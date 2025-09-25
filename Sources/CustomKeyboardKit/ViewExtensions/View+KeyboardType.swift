@@ -65,18 +65,16 @@ public struct KeyboardModifier: ViewModifier {
     }
     
     private func switchKeyboard(to keyboard: Keyboard, on textView: (any TextEditing)?) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            switch keyboard {
-            case let systemKeyboard as SystemKeyboard:
-                textView?.inputView = nil
-                textView?.keyboardType = systemKeyboard.keyboardType
-            case let customKeyboard as Keyboard:
-                textView?.inputView = customKeyboard.keyboardInputView
-            default:
-                textView?.inputView = nil
-            }
-            textView?.reloadInputViews()
+        switch keyboard {
+        case let systemKeyboard as SystemKeyboard:
+            textView?.inputView = nil
+            textView?.keyboardType = systemKeyboard.keyboardType
+        case let customKeyboard as Keyboard:
+            textView?.inputView = customKeyboard.keyboardInputView
+        default:
+            textView?.inputView = nil
         }
+        textView?.reloadInputViews()
     }
     
     func assignSubmitForEditingView(isEditing: Bool) {
