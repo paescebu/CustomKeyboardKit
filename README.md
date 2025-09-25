@@ -153,7 +153,7 @@ struct ContentView: View {
         }
     }
 }
-
+```
 
 ## Complete Example
 Check out the video below for the following example code and see how it works perfectly side-by-side with native keyboards.
